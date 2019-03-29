@@ -1,8 +1,9 @@
 <?php
+require_once(__DIR__ . '/classes/DataFiles.php');
+require_once(__DIR__ . '/classes/Agreement.php');
 
 class DisiiGDPR extends Module
 {
-
     public function __construct()
     {
         /**
@@ -55,17 +56,15 @@ class DisiiGDPR extends Module
 
     public function install()
     {
-        return (parent::install() &&
-            $this->installTab('AdminAdmin', 'AdminDisiiGDPR', 'GDPR Manager') &&
-            Configuration::updateValue('DISIIGDPR', "DisiiGDPR") &&
-            ppp('test')
+        return (parent::install()
+            && $this->installTab('DEFAULT', 'AdminDisiiGDPR', 'GDPR Manager')
+            && $this->installTab('AdminDisiiGDPR', 'DataFile', 'File manager')
+            && $this->installTab('AdminDisiiGDPR', 'AgreementManager', 'Agreement Manager')
+            && $this->registerHook('displayBackOfficeHeader')
+            && $this->registerHook('customerAccount')
         );
     }
 
-    public function installDataFile()
-    {
-        
-    }
     public function installTab($parent_class, $class_name, $name)
     {
         $tab = new Tab();
@@ -84,6 +83,11 @@ class DisiiGDPR extends Module
         return $tab->add();
     }
 
+    public function installDataFile()
+    {
+
+    }
+
     public function uninstall()
     {
         // Uninstall Tabs
@@ -94,5 +98,14 @@ class DisiiGDPR extends Module
         if (!parent::uninstall())
             return false;
         return true;
+    }
+
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->context->controller->addCss($this->_path . 'css/tab.css');
+    }
+
+    public function hookCustomerAccount(){
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/gdprAccountButton.tpl');
     }
 }
