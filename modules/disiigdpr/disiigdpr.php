@@ -4,6 +4,11 @@ require_once(__DIR__ . '/classes/Agreement.php');
 
 class DisiiGDPR extends Module
 {
+
+    private $_default_values = array(
+        'GDPR_FREQUENCY' => '25'
+    );
+
     public function __construct()
     {
         /**
@@ -44,25 +49,35 @@ class DisiiGDPR extends Module
          */
         $this->bootstrap = true;
 
+
+
         parent::__construct();
 
 
     }
 
-    public function getContent()
-    {
-        return 'je suis dans la config';
-    }
 
     public function install()
     {
         return (parent::install()
+            && $this->_initDefaultConfigurationValues()
+            && $this->_installSQL()
             && $this->installTab('DEFAULT', 'AdminDisiiGDPR', 'GDPR Manager')
             && $this->installTab('AdminDisiiGDPR', 'DataFile', 'File manager')
             && $this->installTab('AdminDisiiGDPR', 'AgreementManager', 'Agreement Manager')
             && $this->registerHook('displayBackOfficeHeader')
             && $this->registerHook('customerAccount')
         );
+    }
+
+    private function _initDefaultConfigurationValues()
+    {
+        foreach ($this->_default_values as $key => $value) {
+            if (false === Configuration::get($key)) {
+                Configuration::updateValue($key, $value);
+            }
+        }
+        return true;
     }
 
     public function installTab($parent_class, $class_name, $name)
@@ -88,6 +103,45 @@ class DisiiGDPR extends Module
 
     }
 
+    private function _installSQL()
+    {
+        $sqls = [];
+
+        $sqls[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."datafiles` (
+            `id_datafiles` int(11) NOT NULL AUTO_INCREMENT,
+            `date_add` datetime NOT NULL,
+            `date_upd` datetime NOT NULL,
+            PRIMARY KEY (`id_datafiles`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        $sqls[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."datafiles_lang` (
+            `id_datafiles` int(11) NOT NULL AUTO_INCREMENT,
+            `id_lang` int(11) NOT NULL,
+            `name` varchar(64) NOT NULL,
+            `description` text NOT NULL,
+            PRIMARY KEY (`id_datafiles`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        $sqls[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."agreement` (
+            `id_agreement` int(11) NOT NULL AUTO_INCREMENT,
+            `id_customer` int(11) NOT NULL,
+            `status` int(11) NOT NULL,
+            `ip` varchar(30) NOT NULL,
+            `date_add` datetime NOT NULL,
+            `id_datafile` int(11) NOT NULL,
+            PRIMARY KEY (`id_agreement`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        $db = DB::getInstance();
+
+        foreach($sqls as $sql)
+        {
+            $db->execute($sql);
+        }
+        return true;
+    }
+
+
     public function uninstall()
     {
         // Uninstall Tabs
@@ -99,6 +153,63 @@ class DisiiGDPR extends Module
             return false;
         return true;
     }
+
+    public function getContent()
+    {
+        $html = '';
+        $html .= $this->processConfiguration();
+        $fieldsForm[0]['form'] = [
+            'legend' => [
+                'title' => $this->l('GDPR configuration')
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Acceptance proof frequency'),
+                    'name' => 'GDPR_FREQUENCY',
+                    'required' => true
+                ]
+            ],
+            'submit' => [
+                'title' => $this->l('Save'),
+                'class' => 'btn btn-default pull-right'
+            ]
+        ];
+        $helper = new HelperForm();
+        // Module, token and currentIndex
+        $helper->module = $this;
+        $helper->title = $this->displayName;
+        $helper->show_toolbar = true;        // false -> remove toolbar
+        $helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
+        $helper->submit_action = 'submit' . $this->name;
+        $helper->toolbar_btn = [
+            'save' => [
+                'desc' => $this->l('Save'),
+                'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&save' . $this->name .
+                    '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            ],
+            'back' => [
+                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'desc' => $this->l('Back to list')
+            ]
+        ];
+        // Load current value
+        foreach ($this->_default_values as $key => $default_value) {
+            $helper->fields_value[$key] = Configuration::get($key);
+        }
+        $html .= $helper->generateForm($fieldsForm);
+        return $html;
+    }
+
+    public function processConfiguration()
+    {
+        if(Tools::isSubmit('submitgdpr')){
+            $set_day = Tools::getValue('GDPR_FREQUENCY');
+            Configuration::updateValue('GDPR_FREQUENCY', $set_day);
+        }
+    }
+
+
 
     public function hookDisplayBackOfficeHeader()
     {
