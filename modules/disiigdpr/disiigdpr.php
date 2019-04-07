@@ -102,10 +102,18 @@ class DisiiGDPR extends Module
 
     public function hookDisplayBackOfficeHeader()
     {
-        $this->context->controller->addCss($this->_path . 'css/tab.css');
+        $this->context->controller->addCss($this->_path . 'views/css/tab.css');
     }
 
     public function hookCustomerAccount(){
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/gdprAccountButton.tpl');
+
+        //return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/front/gdprAccountButton.tpl');
+        $link= new Link();
+        $link_gdpr_agreement = $link->getModuleLink($this->name, 'displayGDPR');
+        $this->context->smarty->assign(array(
+           'gdprAgreementLink' => $link_gdpr_agreement
+        ));
+        
+        return $this->display(__FILE__, 'gdprAccountButton.tpl');
     }
 }
