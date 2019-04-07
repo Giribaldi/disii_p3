@@ -7,7 +7,7 @@ class DataFiles extends ObjectModel
      */
     public static $definition = array(
         'table' => 'datafiles',
-        'primary' => 'id_d atafiles',
+        'primary' => 'id_datafiles',
         'multilang' => true,
         'fields' => array(
             'date_add' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
