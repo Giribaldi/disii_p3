@@ -29,12 +29,11 @@ class AgreementManagerController extends ModuleAdminController
     public function renderList()
     {
         //pour gérer la liste des actions en bout de ligne
-        $this->addRowAction('edit');
-        $this->addRowAction('delete');
+
 
         $list = parent::renderList();
 
-        $top = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/agreementfilter.tpl');
+        $top = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/admin/agreementfilter.tpl');
 
         return $top . $list;
     }
