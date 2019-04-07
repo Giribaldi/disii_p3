@@ -29,11 +29,22 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
         return Db::getInstance()->executeS($sql);
     }
     public function orders(){
+
         $user_id = Context::getContext()->customer->id;
         $sql = "SELECT COUNT(id_order)
             FROM "._DB_PREFIX_."orders
             WHERE id_customer = ".$user_id;
         return Db::getInstance()->executeS($sql);
+    }
+
+    public function getVisits()
+    {
+        $user_id = Context::getContext()->customer->id;
+        return Db::getInstance()->executeS('
+		SELECT COUNT(c.id_connections)
+		FROM `'._DB_PREFIX_.'guest` g
+		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
+		WHERE g.`id_customer` = '.(int)$user_id);
     }
 
     public function initContent()
@@ -52,6 +63,7 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
 
         $lost_basket = $this->lostBasket();
         $orders = $this->orders();
+        $visits = $this->getVisits();
 
 
 
@@ -61,7 +73,8 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
             'data_files' => $data_files,
             'agreements' => $data_files_agreements,
             'lost_basket' => $lost_basket[0]["COUNT(id_cart)"],
-            'orders' => $orders[0]["COUNT(id_order)"]
+            'orders' => $orders[0]["COUNT(id_order)"],
+            'visits' => $visits[0]["COUNT(c.id_connections)"],
         ]);
 
         $this->setTemplate('gdprFrontTemplate.tpl');
