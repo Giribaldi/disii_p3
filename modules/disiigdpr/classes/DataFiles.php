@@ -22,4 +22,19 @@ class DataFiles extends ObjectModel
     public $description;
     public $date_add;
     public $date_upd;
+
+    public static function defaultSQL(){
+        $sqls = [];
+        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'datafiles`(`id_datafiles`, `date_add`, `description`)
+                   VALUES (1, \'Accounting\', \'\')';
+        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'admin_gdpr_data_file`(`id_admin_gdpr_data_file`, `data_file_name`, `description`)
+                   VALUES (2, \'Traffic statistics\', \'\')';
+        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'admin_gdpr_data_file`(`id_admin_gdpr_data_file`, `data_file_name`, `description`)
+                   VALUES (3, \'Marketing history\', \'\')';
+        $db = DB::getInstance();
+        foreach($sqls as $sql){
+            $db->execute($sql);
+        }
+        return true;
+    }
 }
