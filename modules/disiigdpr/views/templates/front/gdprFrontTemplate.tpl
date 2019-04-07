@@ -10,10 +10,10 @@
                     </label>
                     <p>Description : {$data_file.description}</p>
                     <label class="radio-inline">
-                        <input type="radio" name="{$data_file.id_datafiles}" id="inlineRadio1" {if isset($agreements) && $agreements[$data_file.id_datafiles] eq 1}checked="checked" {/if}value="1"> Accept
+                        <input type="radio" name="{$data_file.id_datafiles}" id="inlineRadio1" {if isset($agreements[$data_file.id_datafiles]) && $agreements[$data_file.id_datafiles] eq 1}checked="checked" {/if}value="1"> Accept
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="{$data_file.id_datafiles}" id="inlineRadio2" {if isset($agreements) && $agreements[$data_file.id_datafiles] eq 0}checked="checked" {/if}value="0"> Refuse
+                        <input type="radio" name="{$data_file.id_datafiles}" id="inlineRadio2" {if isset($agreements[$data_file.id_datafiles]) && $agreements[$data_file.id_datafiles] eq 0}checked="checked" {/if}value="0"> Refuse
                     </label>
                 </div>
             {/foreach}
@@ -43,6 +43,12 @@
         <div class="panel-heading">Orders</div>
         <div class="panel-body">
             {$orders}
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">Visits</div>
+        <div class="panel-body">
+            {$visits}
         </div>
     </div>
 
