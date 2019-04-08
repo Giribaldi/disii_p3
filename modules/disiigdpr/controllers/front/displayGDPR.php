@@ -47,6 +47,15 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
 		WHERE g.`id_customer` = '.(int)$user_id);
     }
 
+    public function getAddresses()
+    {
+        $user_id = Context::getContext()->customer->id;
+        return Db::getInstance()->executeS('
+		SELECT COUNT(id_address)
+		FROM `'._DB_PREFIX_.'address` 
+		WHERE `id_customer` = '.(int)$user_id);
+    }
+
     public function initContent()
     {
         $sql_query_data_files = 'SELECT * FROM '._DB_PREFIX_.'datafiles AS A LEFT JOIN '._DB_PREFIX_.'datafiles_lang AS B ON A.id_datafiles = B.id_datafiles';
@@ -64,9 +73,7 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
         $lost_basket = $this->lostBasket();
         $orders = $this->orders();
         $visits = $this->getVisits();
-
-
-
+        $addresses = $this->getAddresses();
 
         $this->context->smarty->assign([
             'greetingsFront' => 'Hello Front from Disii GDPR Module !',
@@ -75,6 +82,7 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
             'lost_basket' => $lost_basket[0]["COUNT(id_cart)"],
             'orders' => $orders[0]["COUNT(id_order)"],
             'visits' => $visits[0]["COUNT(c.id_connections)"],
+            'addresses'=> $addresses[0]["COUNT(id_address)"],
         ]);
 
         $this->setTemplate('gdprFrontTemplate.tpl');
