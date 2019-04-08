@@ -1,4 +1,7 @@
 <?php
+require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/classes/Agreement.php');
+
+
 
 class AgreementManagerController extends ModuleAdminController
 {
@@ -18,6 +21,10 @@ class AgreementManagerController extends ModuleAdminController
             'date_add' => array('title' => $this->l('Date_Add'))
         );
 
+        if (Tools::getValue('exportcsv') == 'true'){
+            $this->exportCSV();
+        }
+
         parent::__construct();
     }
 
@@ -36,6 +43,15 @@ class AgreementManagerController extends ModuleAdminController
         $top = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'disiigdpr/views/templates/admin/agreementfilter.tpl');
 
         return $top . $list;
+    }
+
+    public function exportCSV(){
+        $sql = "SELECT * FROM "._DB_PREFIX_."agreement";
+        $result = DB::getInstance()->executeS($sql);
+        $detail = new PrestaShopCollection("Agreement");
+        $allData = $detail->getAll();
+        $csv = new CSV($allData, 'data');
+        $csv->export();
     }
 
 }
