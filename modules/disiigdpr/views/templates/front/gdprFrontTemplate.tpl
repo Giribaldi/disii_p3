@@ -1,3 +1,15 @@
+{capture name=path}
+    <a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
+        {l s='My account'}
+    </a>
+    <span class="navigation-pipe">
+		{$navigationPipe}
+	</span>
+    <span class="navigation_page">
+		Vie privée
+	</span>
+{/capture}
+
 <div class="box">
     <h1 class="page-subheading">
         GDPR Agreement
@@ -51,10 +63,22 @@
             {$visits}
         </div>
     </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">Adresses</div>
+        <div class="panel-body">
+            {$addresses}
+        </div>
+    </div>
 
 
 </div>
 <div></div>
 <ul class="footer_links clearfix">
-    <li><a href="" class="btn btn-default button button-small"><span><i class="icon-chevron-left"></i> Retour à la liste de vos adresses</span></a></li>
+    <li>
+        <a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
+			<span>
+				<i class="icon-chevron-left"></i> {l s='Back to your account'}
+			</span>
+        </a>
+    </li>
 </ul>
