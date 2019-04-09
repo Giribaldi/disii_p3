@@ -53,8 +53,11 @@ class AgreementManagerController extends ModuleAdminController
         $detail = new PrestaShopCollection("Agreement");
         $allData = $detail->getAll();
         $csv = new CSVGenerator($allData, 'data');
-        $csv->export();
+        $arrayToUnset = ['id', 'id_shop_list', 'force_id'];
+        $csv->export($arrayToUnset);
         die();
     }
+
+
 
 }
