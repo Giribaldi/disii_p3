@@ -24,13 +24,28 @@ class DataFiles extends ObjectModel
     public $date_upd;
 
     public static function defaultSQL(){
+
+        $languages = Language::getLanguages();
+
         $sqls = [];
-        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'datafiles`(`id_datafiles`, `date_add`, `description`)
-                   VALUES (1, \'Accounting\', \'\')';
-        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'admin_gdpr_data_file`(`id_admin_gdpr_data_file`, `data_file_name`, `description`)
-                   VALUES (2, \'Traffic statistics\', \'\')';
-        $sqls[] = 'INSERT IGNORE INTO`'._DB_PREFIX_.'admin_gdpr_data_file`(`id_admin_gdpr_data_file`, `data_file_name`, `description`)
-                   VALUES (3, \'Marketing history\', \'\')';
+
+        $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles`(`id_datafiles`, `date_add`, `date_upd`)
+                   VALUES (1, NOW(), NOW())";
+        $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles`(`id_datafiles`, `date_add`, `date_upd`)
+                   VALUES (2, NOW(), NOW())";
+        $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles`(`id_datafiles`, `date_add`, `date_upd`)
+                   VALUES (3, NOW(), NOW())";
+
+        foreach ($languages as $lang){
+
+            $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles_lang`(`id_datafiles`, `id_lang`, `name`, `description`)
+                   VALUES (1,".$lang['id_lang'].", 'Comptabilité', 'Fichier de données composé de vos factures permettant de tenir une trace comptable' )";
+            $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles_lang`(`id_datafiles`, `id_lang`, `name`, `description`)
+                   VALUES (2, ".$lang['id_lang'].", 'Statistiques de visite', 'Fichier de données composé d\'un historique de vos visite sur le site' )";
+            $sqls[] = "INSERT IGNORE INTO`"._DB_PREFIX_."datafiles_lang`(`id_datafiles`, `id_lang`, `name`, `description`)
+                   VALUES (3,".$lang['id_lang'].", 'Historique marketing', 'Fichier de donnée composé de vos diferentes adresses ainsi que vos paniers' )";
+        }
+
         $db = DB::getInstance();
         foreach($sqls as $sql){
             $db->execute($sql);
