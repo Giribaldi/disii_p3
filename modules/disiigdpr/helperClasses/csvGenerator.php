@@ -52,8 +52,8 @@ class CSVGenerator
             $secure_key = Db::getInstance()->executeS($sql);
             $link= new Link();
             $link_gdpr_agreement = $link->getModuleLink('disiigdpr', 'handleGDPRLink');
-            $object->acceptLink = $link_gdpr_agreement."&datafile=".$data_file."&checkLink=true&user_id=".$user_id."&status=1&token=". md5($user_id."1".$secure_key[0]['secure_key']);
-            $object->denyLink = $link_gdpr_agreement."&datafile=".$data_file."&checkLink=true&user_id=".$user_id."&status=0&token=". md5($user_id."0".$secure_key[0]['secure_key']);
+            $object->acceptLink = $link_gdpr_agreement."&datafile=".$data_file."&user_id=".$user_id."&status=1&token=". md5($user_id."1".$secure_key[0]['secure_key'].$data_file);
+            $object->denyLink = $link_gdpr_agreement."&datafile=".$data_file."&user_id=".$user_id."&status=0&token=". md5($user_id."0".$secure_key[0]['secure_key'].$data_file);
 
 
             $vars = get_object_vars($object);

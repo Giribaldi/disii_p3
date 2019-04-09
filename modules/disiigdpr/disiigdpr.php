@@ -67,6 +67,7 @@ class DisiiGDPR extends Module
             && $this->installTab('AdminDisiiGDPR', 'AgreementManager', 'Agreement Manager')
             && $this->registerHook('displayBackOfficeHeader')
             && $this->registerHook('customerAccount')
+            && DataFiles::defaultSQL()
         );
     }
 
