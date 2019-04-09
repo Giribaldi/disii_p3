@@ -94,7 +94,6 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
         if (Tools::isSubmit('submit_gdpr_agreement')){
             $user_id = Context::getContext()->customer->id;
             $ip = $_SERVER['REMOTE_ADDR'];
-
             foreach ($_POST as $key => $value){
                 if ($key != 'submit_gdpr_agreement') {
                     $sql = "INSERT INTO "._DB_PREFIX_."agreement (id_customer, status, ip, date_add, id_datafile)
@@ -102,8 +101,25 @@ class disiigdprDisplayGDPRModuleFrontController extends ModuleFrontController
                     $db = DB::getInstance();
                     $db->execute($sql);
                 }
+
+                if ($key == 1 && $value == 0){
+                    $this->anonymizingAccounting($user_id);
+                }
+                if ($key == 2 && $value == 0){
+                    $this->anonymizingVisits($user_id);
+                }
             }
         }
+    }
+
+    public function anonymizingAccounting($user_id){
+        $deleteCart = "DELETE FROM "._DB_PREFIX_."cart WHERE id_customer = ".$user_id;
+        DB::getInstance()->execute($deleteCart);
+    }
+    public function anonymizingVisits($user_id){
+        $id_guest = DB::getInstance()->executeS("SELECT id_guest FROM "._DB_PREFIX_."guest WHERE id_customer = ".$user_id);
+        $sql = "DELETE FROM "._DB_PREFIX_."connections WHERE id_guest = ".$id_guest[0]['id_guest'];
+        DB::getInstance()->execute($sql);
     }
 }
 
