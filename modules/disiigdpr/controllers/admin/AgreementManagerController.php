@@ -1,8 +1,8 @@
 <?php
 
 
-
-
+require_once(_PS_MODULE_DIR_.'disiigdpr/classes/Agreements.php');
+require_once(_PS_MODULE_DIR_.'disiigdpr/helperClasses/csvGenerator.php');
 
 
 
@@ -50,8 +50,7 @@ class AgreementManagerController extends ModuleAdminController
     }
 
     public function exportCSV(){
-        require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/classes/Agreements.php');
-        require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/helperClasses/csvGenerator.php');
+
         $detail = new PrestaShopCollection("Agreements");
         $allData = $detail->getAll();
         $csv = new CSVGenerator($allData, 'data');
