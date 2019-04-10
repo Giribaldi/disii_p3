@@ -2,8 +2,7 @@
 
 
 
-require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/classes/Agreement.php');
-require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/helperClasses/csvGenerator.php');
+
 
 
 
@@ -15,7 +14,7 @@ class AgreementManagerController extends ModuleAdminController
     {
 
         $this->table = 'agreement';
-        $this->className = 'Agreement';
+        $this->className = 'Agreements';
         $this->fields_list = array(
             'id_agreement' => array('title' => $this->l('id_agreement'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'id_customer' => array('title' => $this->l('Id_customer')),
@@ -28,6 +27,7 @@ class AgreementManagerController extends ModuleAdminController
         if (Tools::getValue('exportcsv') == 'true'){
             $this->exportCSV();
         }
+
 
         parent::__construct();
     }
@@ -50,13 +50,16 @@ class AgreementManagerController extends ModuleAdminController
     }
 
     public function exportCSV(){
-        $detail = new PrestaShopCollection("Agreement");
+        require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/classes/Agreements.php');
+        require_once('/data/clients/disii/2017-19/graphael/prestashop16/modules/disiigdpr/helperClasses/csvGenerator.php');
+        $detail = new PrestaShopCollection("Agreements");
         $allData = $detail->getAll();
         $csv = new CSVGenerator($allData, 'data');
         $arrayToUnset = ['id', 'id_shop_list', 'force_id'];
         $csv->export($arrayToUnset);
         die();
     }
+
 
 
 

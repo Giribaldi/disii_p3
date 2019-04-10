@@ -1,6 +1,6 @@
 <?php
 
-class Agreement extends ObjectModel
+class Agreements extends ObjectModel
 {
     /**
      * @see ObjectModel::$definition

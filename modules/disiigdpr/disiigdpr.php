@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . '/classes/DataFiles.php');
-require_once(__DIR__ . '/classes/Agreement.php');
+require_once(__DIR__ . '/classes/Agreements.php');
 
 class DisiiGDPR extends Module
 {
