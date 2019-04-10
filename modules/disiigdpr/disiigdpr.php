@@ -6,7 +6,7 @@ class DisiiGDPR extends Module
 {
 
     private $_default_values = array(
-        'GDPR_FREQUENCY' => '25'
+        'GDPR_FREQUENCY' => '365'
     );
 
     public function __construct()
