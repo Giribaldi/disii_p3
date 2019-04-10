@@ -204,7 +204,7 @@ class DisiiGDPR extends Module
 
     public function processConfiguration()
     {
-        if(Tools::isSubmit('submitgdpr')){
+        if(Tools::isSubmit('submitdisiigdpr')){
             $set_day = Tools::getValue('GDPR_FREQUENCY');
             Configuration::updateValue('GDPR_FREQUENCY', $set_day);
         }
